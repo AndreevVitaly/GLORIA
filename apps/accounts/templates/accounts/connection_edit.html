@@ -1,0 +1,4 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Изменить запись{% endblock %}
+{% block heading %}Моё окружение{% endblock %}
+{% block account_content %}<section class="account-card"><h2>Изменить запись</h2><form method="post">{% csrf_token %}{{ form.non_field_errors }}{% include 'accounts/field.html' with field=form.label %}<div class="form-actions"><button class="primary" type="submit">Сохранить</button><a href="{% url 'accounts:environment' %}">Отмена</a></div></form></section>{% endblock %}

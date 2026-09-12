@@ -1,0 +1,55 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GIOIA — цветы, которые дарят радость. Знакомьтесь с нашей первой коллекцией и находите вдохновение для своего букета.">
+  <link rel="icon" href="{% static 'content/favicon.svg' %}" type="image/svg+xml">
+  <title>GIOIA — цветы, которые дарят радость</title>
+  <link rel="stylesheet" href="{% static 'content/store.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/account.css' %}">
+  <script src="{% static 'content/store.js' %}" defer></script>
+</head>
+<body>
+<a class="skip" href="#catalog">Перейти к коллекции</a>
+<div class="announcement">Маленький повод для большой радости <span>Знакомьтесь с GIOIA ♡</span></div>
+<header>
+  <div class="header-main wrap">
+    <a class="logo" href="/" aria-label="GIOIA — главная">GIOIA<span>ЦВЕТЫ С ЧУВСТВОМ</span></a>
+    <span class="brand-note">Искусство дарить<br>простые радости</span>
+    <form class="search" action="/#catalog" role="search"><span aria-hidden="true">⌕</span><input name="q" value="{{ query }}" aria-label="Поиск цветов" placeholder="Какой букет вы ищете?"><button aria-label="Найти букет">Найти</button></form>
+    <a class="account-link" href="{% url 'accounts:profile' %}"><span aria-hidden="true">◯</span> {% if request.user.is_authenticated %}Кабинет{% else %}Войти{% endif %}</a>
+    <button class="favorites-nav" id="favorites-toggle" aria-pressed="false"><span aria-hidden="true">♡</span> Избранное <b id="favorite-count">0</b></button>
+  </div>
+  <nav class="nav wrap" aria-label="Основная навигация">
+    <a class="catalog-nav" href="#catalog"><span aria-hidden="true">☰</span> Каталог цветов</a>
+    <a href="/?flower=rose#catalog">Розы</a><a href="/?flower=peony#catalog">Пионы</a><a href="/?flower=tulip#catalog">Тюльпаны</a><a href="/?flower=mix#catalog">Сборные букеты</a>
+    <a href="#about">О GIOIA</a><a href="#delivery">Доставка</a><a class="builder-nav" href="#create">Свой особенный букет ↗</a>
+  </nav>
+</header>
+<main>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy"><p class="eyebrow">GIOIA · РАДОСТЬ В КАЖДОМ ЛЕПЕСТКЕ</p><h1 id="hero-title">Цветы, которые<br>говорят <em>за вас.</em></h1><p class="hero-text">Для больших признаний и маленьких «спасибо».<br>Для любимых. И просто для себя.</p><a class="primary" href="#catalog">Выбрать букет <span>↗</span></a><span class="hero-bottom">С заботой о чувствах. С любовью к цветам.</span></div>
+    <div class="hero-image"><img src="{% static 'content/images/peonies.jpg' %}" alt="Нежная цветочная композиция" fetchpriority="high"><span class="hero-stamp">счастье<br><em>в деталях</em><span>GIOIA FLOWERS</span></span></div>
+  </section>
+  <section class="benefits wrap" aria-label="Наш подход"><div><span class="benefit-icon">✿</span><p><strong>Цветы с характером</strong><small>От лаконичной классики до садовых историй</small></p></div><div><span class="benefit-icon">♡</span><p><strong>Для ваших чувств</strong><small>Особенный букет для особенного человека</small></p></div><div><span class="benefit-icon">✧</span><p><strong>Внимание к деталям</strong><small>Красота в оттенках, фактурах и сочетаниях</small></p></div></section>
+  <section id="catalog" class="catalog-section wrap" aria-labelledby="catalog-title">
+    <div class="breadcrumbs"><a href="/">Главная</a><span>/</span>Коллекция цветов</div>
+    <div class="section-heading"><div><p class="eyebrow">НАЙДИТЕ СВОЁ ЦВЕТОЧНОЕ НАСТРОЕНИЕ</p><h2 id="catalog-title">Букеты для тёплых моментов</h2></div><span class="collection-label">Первая коллекция <span>↙</span></span></div>
+    <div class="categories"><a class="{% if not selected %}active{% endif %}" href="/#catalog">Все букеты</a>{% for code, label in flower_filters %}<a class="{% if code in selected %}active{% endif %}" href="/?flower={{ code }}#catalog">{{ label }}</a>{% endfor %}<a href="/?max=3500#catalog">До 3 500 ₽</a><a href="#create">Букет по вашей задумке ↗</a></div>
+    <p class="collection-notice">Знакомимся с будущей коллекцией: фотографии и цены приведены для примера. Оформление заказов пока недоступно.</p>
+    <div class="catalog-layout">
+      <aside class="filters"><form action="/#catalog" id="filter-form"><div class="filter-title"><h3>Фильтры</h3><a href="/#catalog">Сбросить</a></div><input type="hidden" name="q" value="{{ query }}"><fieldset><legend>Стоимость, ₽</legend><div class="price-inputs"><label><span>от</span><input type="number" min="0" max="1000000" name="min" value="{{ minimum|default_if_none:'' }}" aria-label="Минимальная цена" placeholder="0"></label><label><span>до</span><input type="number" min="0" max="1000000" name="max" value="{{ maximum|default_if_none:'' }}" aria-label="Максимальная цена" placeholder="10 000"></label></div></fieldset><fieldset><legend>Любимые цветы</legend>{% for code, label in flower_filters %}<label class="checkbox"><input type="checkbox" name="flower" value="{{ code }}" {% if code in selected %}checked{% endif %}><span>{{ label }}</span></label>{% endfor %}</fieldset><button class="filter-apply" type="submit">Показать букеты</button></form><div class="sidebar-note"><span>♡</span><h3>Не нужен повод,<br>чтобы порадовать</h3><p>Иногда букет — это просто хороший день, который вы дарите другому.</p></div></aside>
+      <div class="catalog-results"><div class="results-toolbar"><span id="result-count">Вариантов: {{ products|length }}{% if query %} · «{{ query }}»{% endif %}</span><label>Сначала <select id="sort-select" aria-label="Порядок букетов" form="filter-form" name="sort"><option value="featured" {% if sort == 'featured' %}selected{% endif %}>выбор GIOIA</option><option value="price" {% if sort == 'price' %}selected{% endif %}>дешевле</option><option value="-price" {% if sort == '-price' %}selected{% endif %}>дороже</option></select></label></div>
+      <div class="product-grid">{% for product in products %}<article class="product" data-product="{{ product.id }}"><div class="product-image"><img src="{% static 'content/images/' %}{{ product.image }}" alt="{{ product.name }} — цветочное вдохновение" loading="lazy"><span class="badge">{{ product.badge }}</span><button class="favorite" data-favorite="{{ product.id }}" aria-label="Добавить {{ product.name }} в избранное" aria-pressed="false">♡</button><button class="image-detail" data-open="detail-{{ product.id }}">Посмотреть ближе ↗</button></div><div class="product-info"><p class="product-category">ЦВЕТОЧНОЕ ВДОХНОВЕНИЕ</p><h3><button data-open="detail-{{ product.id }}">{{ product.name }}</button></h3><p class="composition">{{ product.composition }}</p><div class="product-bottom"><strong>{{ product.price }} <span>₽</span></strong><button class="detail-button" data-open="detail-{{ product.id }}">Подробнее <span>↗</span></button></div></div></article>{% empty %}<div class="empty-state"><span>✿</span><h3>Пока нет такого сочетания</h3><p>Попробуйте другие цветы или измените диапазон цены.</p><a class="primary" href="/#catalog">Посмотреть все букеты</a></div>{% endfor %}</div><div id="favorites-empty" class="empty-state" hidden><span>♡</span><h3>Сохраните то, что нравится</h3><p>Нажмите на сердечко на карточке. Избранное сохраняется в этом браузере.</p><button class="primary" id="show-all">Показать коллекцию</button></div>
+      </div>
+    </div>
+  </section>
+  <section id="create" class="create-section wrap"><div><p class="eyebrow">ВАША ИДЕЯ. ВАШИ ЦВЕТЫ. ВАШ БУКЕТ.</p><h2>Красота —<br>по вашим правилам.</h2><p>Розы или пионы? Нежный розовый или смелый красный?<br>Мы готовим конструктор, в котором вы сможете<br>собрать свою цветочную историю.</p><span class="soon">Конструктор букетов · скоро</span></div><div class="create-art" aria-hidden="true"><span class="flower-one">✿</span><span class="flower-two">✿</span><span class="flower-three">✿</span><span class="art-caption">made with joy</span></div></section>
+  <section class="about-section wrap"><div id="about"><p class="eyebrow">НЕМНОГО О НАС</p><h2>GIOIA значит «радость».</h2><p>Мы верим, что цветам не нужен особый повод. Тёплая встреча, маленькая победа или желание сказать «я рядом» — уже достаточно. GIOIA начинается с простой идеи: помогать делиться чувствами через цветы.</p></div><div id="delivery"><p class="eyebrow">ГОТОВИМСЯ К ПЕРВОМУ БУКЕТУ</p><h2>Скоро — ближе к вам.</h2><p>Магазин готовится к открытию. География, сроки и стоимость доставки появятся здесь перед началом приёма заказов. А пока можно познакомиться с коллекцией и сохранить понравившиеся идеи.</p></div></section>
+</main>
+<footer><div class="wrap footer-top"><a class="logo" href="/">GIOIA<span>ЦВЕТЫ С ЧУВСТВОМ</span></a><p>Больше цветов.<br>Больше поводов улыбаться.</p><div><a href="#catalog">Коллекция</a><a href="#about">О GIOIA</a><a href="#delivery">Доставка</a></div><span class="footer-flower" aria-hidden="true">✿</span></div><div class="wrap footer-bottom"><span>© {% now 'Y' %} GIOIA</span><span>С любовью к цветам и людям</span></div></footer>
+{% for product in products %}<dialog id="detail-{{ product.id }}" class="product-dialog"><button class="close-dialog" aria-label="Закрыть">×</button><div class="dialog-layout"><img src="{% static 'content/images/' %}{{ product.image }}" alt="{{ product.name }}"><div><p class="eyebrow">ПЕРВАЯ КОЛЛЕКЦИЯ GIOIA</p><h2>{{ product.name }}</h2><p>{{ product.description }}</p><p>{{ product.composition }}</p><strong class="dialog-price">{{ product.price }} ₽</strong><p class="dialog-note">Пример букета и ориентировочная цена. Фото иллюстративное. Приём заказов ещё не открыт.</p><button class="primary" data-favorite="{{ product.id }}" aria-pressed="false">♡ Сохранить идею</button></div></div></dialog>{% endfor %}
+<div class="toast" role="status" id="toast" hidden></div>
+</body></html>

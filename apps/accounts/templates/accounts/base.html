@@ -1,0 +1,27 @@
+{% load static %}
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>{% block title %}Личный кабинет{% endblock %} — GIOIA</title>
+<link rel="icon" href="{% static 'content/favicon.svg' %}" type="image/svg+xml">
+<link rel="stylesheet" href="{% static 'content/store.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/account.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/recipient.css' %}">
+<script src="{% static 'accounts/account.js' %}" defer></script>
+</head><body class="account-body">
+<a class="skip" href="#account-main">Перейти к содержимому</a>
+<div class="announcement">GIOIA · Цветы для вас и тех, кто рядом</div>
+<header><div class="header-main wrap">
+<a class="logo" href="{% url 'home' %}" aria-label="GIOIA — главная">GIOIA<span>ЦВЕТЫ С ЧУВСТВОМ</span></a>
+<a class="back-catalog" href="{% url 'home' %}#catalog">← К коллекции цветов</a>
+<span class="account-header-label">{% if request.user.is_authenticated %}Личный кабинет{% else %}Добро пожаловать{% endif %}</span>
+</div></header>
+<main id="account-main" class="account-wrap">
+{% if messages %}<div class="account-messages" aria-live="polite">{% for message in messages %}<div class="account-message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+{% if request.user.is_authenticated %}
+<div class="breadcrumbs"><a href="{% url 'home' %}">Главная</a><span>/</span><a href="{% url 'accounts:profile' %}">Личный кабинет</a></div>
+<div class="account-heading"><div><p class="eyebrow">ВАШЕ ЛИЧНОЕ ПРОСТРАНСТВО</p><h1>{% block heading %}Мои данные{% endblock %}</h1></div><form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="logout-button">Выйти из аккаунта ↗</button></form></div>
+<div class="account-layout"><nav class="account-nav" aria-label="Разделы кабинета"><a href="{% url 'accounts:profile' %}" {% if active_tab == 'profile' %}class="selected" aria-current="page"{% endif %}><span>◯</span> Мои данные</a><a href="{% url 'accounts:environment' %}" {% if active_tab == 'environment' %}class="selected" aria-current="page"{% endif %}><span>♡</span> Окружение</a><a href="{% url 'accounts:recipients' %}" {% if active_tab == 'recipients' %}class="selected" aria-current="page"{% endif %}><span>✿</span> Адресаты</a><a href="{% url 'accounts:password' %}" {% if request.resolver_match.url_name == 'password' %}class="selected" aria-current="page"{% endif %}><span>◇</span> Безопасность</a><div class="account-nav-note">Всё начинается<br>с внимания <span>✿</span></div></nav><div class="account-content">{% block account_content %}{% endblock %}</div></div>
+{% else %}{% block auth_content %}{% endblock %}{% endif %}
+</main><footer class="account-footer"><div class="wrap footer-bottom"><span>© {% now 'Y' %} GIOIA</span><a href="{% url 'home' %}">С любовью к цветам и людям</a></div></footer>
+</body></html>

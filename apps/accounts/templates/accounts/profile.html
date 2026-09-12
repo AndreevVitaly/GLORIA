@@ -1,0 +1,15 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Мои данные{% endblock %}
+{% block account_content %}
+<section class="account-card"><div class="card-heading"><h2>Настройки профиля</h2><span class="private-label">Только для вас</span></div>
+<form method="post" enctype="multipart/form-data" id="profile-form">
+{% csrf_token %}{{ account_form.non_field_errors }}{{ profile_form.non_field_errors }}
+<div class="avatar-editor"><label class="avatar-control" for="id_photo" aria-label="Выбрать фотографию профиля">{% if customer.avatar %}<img id="avatar-preview" src="{% url 'accounts:avatar' %}" alt="Ваше фото">{% else %}<img id="avatar-preview" alt="Предпросмотр фото" hidden><span id="avatar-placeholder"><span class="camera-icon">▣</span>Ваше фото</span>{% endif %}</label><div class="avatar-options"><label class="upload-label" for="id_photo">{% if customer.avatar %}Изменить фото{% else %}Добавить фото{% endif %}</label>{{ profile_form.photo }}<p class="field-help">JPEG, PNG или WebP · до 5 МБ</p>{% if customer.avatar %}<label class="remove-photo">{{ profile_form.remove_photo }} Удалить текущее фото</label>{% endif %}{{ profile_form.photo.errors }}{{ profile_form.remove_photo.errors }}</div></div>
+<div class="profile-grid">{% include 'accounts/field.html' with field=account_form.phone %}{% include 'accounts/field.html' with field=account_form.first_name %}{% include 'accounts/field.html' with field=account_form.email %}{% include 'accounts/field.html' with field=account_form.current_password %}</div>
+<div class="birthday-heading"><span>✧</span><div><h3>Немного больше о вас</h3><p>Дата рождения и пол — по желанию.</p></div></div>
+<div class="profile-grid">{% include 'accounts/field.html' with field=profile_form.birth_date %}{% include 'accounts/field.html' with field=profile_form.gender %}</div>
+<button type="submit" class="primary save-profile">Сохранить изменения <span>↗</span></button>
+</form></section>
+<a class="environment-invite" href="{% url 'accounts:environment' %}"><span class="invite-heart">♡</span><div><strong>Те, кто вам дорог</strong><p>Добавьте супругу, родных и друзей в своё окружение.</p></div><span>↗</span></a>
+<a class="environment-invite recipient-invite" href="{% url 'accounts:recipient_create' %}"><span class="invite-heart">✿</span><div><strong>Добавить адресата</strong><p>Сохраните человека и даты, когда его хочется поздравить.</p></div><span>↗</span></a>
+{% endblock %}
