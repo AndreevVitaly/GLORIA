@@ -1,0 +1,76 @@
+:root {
+  --gloria-forest: #174a38;
+  --gloria-forest-dark: #103728;
+  --gloria-cream: #fbf8f1;
+  --gloria-coral: #df6c5e;
+  --gloria-coral-dark: #bd5145;
+  --gloria-ink: #25352f;
+}
+
+body { background: var(--gloria-cream); color: var(--gloria-ink); }
+
+#header {
+  background: var(--gloria-forest);
+  color: #fff;
+  box-shadow: 0 2px 8px rgb(16 55 40 / 20%);
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited,
+#user-tools, #user-tools a:link, #user-tools a:visited { color: #fff; }
+
+#site-name { display: flex; align-items: baseline; gap: 12px; }
+#site-name a { font-size: 22px; font-weight: 800; letter-spacing: .08em; }
+.gloria-mark { color: #f3b7a9; font-size: 24px; }
+.gloria-subtitle { color: #d9e6da; font-size: 12px; letter-spacing: .03em; }
+
+div.breadcrumbs { background: #28644c; color: #eaf2eb; }
+div.breadcrumbs a { color: #fff; }
+#content { padding-top: 26px; }
+
+.module, .inline-group, div.breadcrumbs + #content-main .module {
+  border: 1px solid #dbe5dc;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgb(23 74 56 / 7%);
+  overflow: hidden;
+}
+
+.module h2, .module caption, .inline-group h2 {
+  background: var(--gloria-forest);
+  color: #fff;
+  font-weight: 700;
+}
+
+#nav-sidebar .module { border-radius: 0; box-shadow: none; }
+#nav-sidebar .module caption, #nav-sidebar .module th {
+  background: #f0f5f0;
+  color: var(--gloria-forest);
+}
+
+a:link, a:visited { color: #1e7658; }
+a:hover, a:focus { color: var(--gloria-coral-dark); }
+
+button, input[type="submit"], input[type="button"], .submit-row input, a.button {
+  background: var(--gloria-coral);
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+button:hover, input[type="submit"]:hover, input[type="button"]:hover,
+.submit-row input:hover, a.button:hover { background: var(--gloria-coral-dark); }
+
+.button.default, input[type="submit"].default, .submit-row input.default { background: var(--gloria-forest); }
+.button.default:hover, input[type="submit"].default:hover, .submit-row input.default:hover { background: var(--gloria-forest-dark); }
+
+thead th, thead td { background: #edf4ed; color: var(--gloria-forest); }
+tr:nth-child(even), .row-form-errors { background: #f7faf5; }
+
+input, textarea, select, .vTextField { border-radius: 5px; border-color: #b8cab9; }
+input:focus, textarea:focus, select:focus {
+  border-color: var(--gloria-forest);
+  box-shadow: 0 0 0 2px rgb(23 74 56 / 15%);
+}
+
+@media (max-width: 767px) {
+  #site-name { gap: 8px; }
+  .gloria-subtitle { display: none; }
+}

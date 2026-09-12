@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | GLORIA{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/gloria-admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+  <a href="{% url 'admin:index' %}"><span class="gloria-mark" aria-hidden="true">✦</span> GLORIA</a>
+  <span class="gloria-subtitle">управление магазином</span>
+</div>
+{% endblock %}
