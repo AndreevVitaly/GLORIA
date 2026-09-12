@@ -8,6 +8,8 @@ from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
 
+from apps.bouquet_builder.models import CustomBouquet
+
 from .forms import (
     AccountForm,
     CelebrationDateFormSet,
@@ -150,6 +152,20 @@ def recipients(request):
         request,
         "accounts/recipients.html",
         {"recipients": page, "active_tab": "recipients"},
+    )
+
+
+@login_required
+def bouquets(request):
+    saved_bouquets = (
+        request.user.custom_bouquets.filter(status=CustomBouquet.Status.SAVED)
+        .select_related("packaging")
+        .prefetch_related("flowers__flower_variant__flower_type", "greenery__greenery_type")
+    )
+    return render(
+        request,
+        "accounts/bouquets.html",
+        {"bouquets": saved_bouquets, "active_tab": "bouquets"},
     )
 
 

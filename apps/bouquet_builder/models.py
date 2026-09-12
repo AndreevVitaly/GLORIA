@@ -20,6 +20,14 @@ class CustomBouquet(TimestampedModel):
         ARCHIVED = "archived", "Архив"
 
     uuid = models.UUIDField("UUID", default=uuid.uuid4, unique=True, editable=False)
+    packaging = models.ForeignKey(
+        "catalog.PackagingType",
+        verbose_name="Упаковка",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="custom_bouquets",
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name="Пользователь",

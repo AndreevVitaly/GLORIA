@@ -1,0 +1,61 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Конструктор букетов — GLORIA</title>
+  <link rel="stylesheet" href="{% static 'bouquet_builder/builder.css' %}">
+  <script src="{% static 'bouquet_builder/builder.js' %}" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/">✦ GLORIA</a><a href="/">Каталог</a><a href="{% url 'accounts:profile' %}">{% if request.user.is_authenticated %}Кабинет{% else %}Войти{% endif %}</a></header>
+  <main class="page">
+    <div class="intro"><p>GLORIA · СОЗДАЙТЕ СВОЙ БУКЕТ</p><h1>Соберите композицию<br><em>для особенного момента.</em></h1><a href="/">← Вернуться к каталогу</a></div>
+    {% if messages %}{% for message in messages %}<div class="notice {{ message.tags }}">{{ message }}</div>{% endfor %}{% endif %}
+    {% if not flower_variants %}
+      <section class="empty"><h2>Каталог пока наполняется</h2><p>Добавьте варианты цветов в админ-панели, и они появятся в конструкторе.</p></section>
+    {% else %}
+      <form method="post" action="{% url 'bouquet_builder:save' %}" class="builder" id="bouquet-form">
+        {% csrf_token %}
+        <section class="steps">
+          <div class="step"><span>01</span><div><h2>Выберите цветы</h2><p>Укажите количество стеблей каждого вида.</p></div></div>
+          <div class="cards flower-cards">
+            {% for item in flower_variants %}
+              <label class="component flower-card" data-price="{{ item.retail_price }}" data-name="{{ item.flower_type.name }}" data-color="{{ item.flower_color.hex_color }}">
+                <span class="flower-dot" style="--flower-color: {{ item.flower_color.hex_color }}"></span>
+                <span class="component-copy"><b>{{ item.flower_type.name }}</b><small>{% if item.flower_variety %}{{ item.flower_variety.name }} · {% endif %}{{ item.flower_color.name }}</small><strong>{{ item.retail_price }} ₽ / шт.</strong></span>
+                <input type="number" min="0" max="99" value="0" name="flower-{{ item.pk }}" aria-label="Количество: {{ item }}">
+              </label>
+            {% endfor %}
+          </div>
+          {% if greenery_types %}
+            <div class="step"><span>02</span><div><h2>Добавьте зелень</h2><p>Она придаст букету объём и характер.</p></div></div>
+            <div class="cards">
+              {% for item in greenery_types %}
+                <label class="component greenery-card" data-price="{{ item.retail_price }}" data-name="{{ item.name }}">
+                  <span class="leaf">❋</span><span class="component-copy"><b>{{ item.name }}</b><small>{{ item.description|default:"Свежая зелень для композиции" }}</small><strong>{{ item.retail_price }} ₽ / ветка</strong></span>
+                  <input type="number" min="0" max="99" value="0" name="greenery-{{ item.pk }}" aria-label="Количество: {{ item.name }}">
+                </label>
+              {% endfor %}
+            </div>
+          {% endif %}
+          <div class="step"><span>03</span><div><h2>Выберите упаковку</h2><p>Можно оставить букет без упаковки.</p></div></div>
+          <div class="packaging">
+            <label><input type="radio" name="packaging" value="" checked><span>Без упаковки</span><b>0 ₽</b></label>
+            {% for item in packaging_types %}<label><input type="radio" name="packaging" value="{{ item.pk }}" data-price="{{ item.price }}"><span>{{ item.name }}</span><b>+{{ item.price }} ₽</b></label>{% endfor %}
+          </div>
+        </section>
+        <aside class="summary" aria-live="polite">
+          <p class="summary-label">ВАШ БУКЕТ</p><div class="bouquet-preview" id="bouquet-preview"><span>✿</span><span>✦</span><span>✿</span><span>❋</span></div>
+          <ul id="composition"><li class="muted">Выберите цветы для композиции</li></ul>
+          <div class="total"><span>Итого</span><strong id="total-price">0 ₽</strong></div>
+          <label class="bouquet-name">Название букета<input name="name" maxlength="200" placeholder="Например, «Нежность»"></label>
+          {% if request.user.is_authenticated %}<button type="submit">Сохранить букет <span>→</span></button>{% else %}<a class="save-login" href="{% url 'accounts:login' %}?next={% url 'bouquet_builder:builder' %}">Войти, чтобы сохранить <span>→</span></a>{% endif %}
+          <small>Цена пересчитывается на сервере при сохранении.</small>
+        </aside>
+      </form>
+    {% endif %}
+  </main>
+</body>
+</html>

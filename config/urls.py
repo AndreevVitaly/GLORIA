@@ -16,6 +16,7 @@ def health(request):
 urlpatterns = [
     path("", home, name="home"),
     path("account/", include("apps.accounts.urls")),
+    path("bouquets/", include("apps.bouquet_builder.urls")),
     path("health/", health, name="health"),
     path("admin/", admin.site.urls),
 ]

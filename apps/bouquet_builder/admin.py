@@ -19,7 +19,7 @@ class BouquetGreeneryInline(admin.TabularInline):
 
 @admin.register(CustomBouquet)
 class CustomBouquetAdmin(admin.ModelAdmin):
-    list_display = ["name", "user", "status", "total_price", "created_at"]
+    list_display = ["name", "user", "packaging", "status", "total_price", "created_at"]
     list_filter = ["status"]
     search_fields = ["name", "user__email", "uuid"]
     readonly_fields = [

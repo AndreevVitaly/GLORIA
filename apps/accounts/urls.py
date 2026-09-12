@@ -21,6 +21,7 @@ urlpatterns = [
     path("environment/<int:pk>/edit/", views.connection_edit, name="connection_edit"),
     path("environment/<int:pk>/delete/", views.connection_delete, name="connection_delete"),
     path("recipients/", views.recipients, name="recipients"),
+    path("bouquets/", views.bouquets, name="bouquets"),
     path("recipients/add/", views.recipient_create, name="recipient_create"),
     path("recipients/<int:pk>/edit/", views.recipient_edit, name="recipient_edit"),
     path("recipients/<int:pk>/delete/", views.recipient_delete, name="recipient_delete"),

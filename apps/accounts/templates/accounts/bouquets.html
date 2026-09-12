@@ -1,0 +1,7 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Мои букеты{% endblock %}
+{% block heading %}Мои букеты{% endblock %}
+{% block account_content %}
+<section class="account-card recipients-intro"><div class="card-heading"><div><h2>Ваши сохранённые композиции</h2><p>Здесь хранятся букеты, собранные в конструкторе.</p></div><a class="primary" href="{% url 'bouquet_builder:builder' %}">✦ Собрать букет</a></div></section>
+<section class="connections-section"><div class="connections-heading"><h2>Сохранённые букеты</h2><span>{{ bouquets|length }}</span></div><div class="recipient-list">{% for bouquet in bouquets %}<article class="recipient-card"><div class="recipient-card-head"><span class="connection-icon">✿</span><div><h3>{{ bouquet.name }}</h3><p>{{ bouquet.created_at|date:'d.m.Y' }} · {% if bouquet.packaging %}{{ bouquet.packaging.name }}{% else %}без упаковки{% endif %}</p></div><strong>{{ bouquet.total_price }} ₽</strong></div><div class="celebration-list">{% for item in bouquet.flowers.all %}<div><strong>{{ item.flower_variant.flower_type.name }} × {{ item.quantity }}</strong></div>{% endfor %}{% for item in bouquet.greenery.all %}<div><strong>{{ item.greenery_type.name }} × {{ item.quantity }}</strong></div>{% endfor %}</div></article>{% empty %}<div class="account-empty"><span>✿</span><h3>Букетов пока нет</h3><p>Соберите первую композицию, и она появится здесь.</p><a class="primary" href="{% url 'bouquet_builder:builder' %}">Собрать букет</a></div>{% endfor %}</div></section>
+{% endblock %}
